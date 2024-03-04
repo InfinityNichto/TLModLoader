@@ -1,5 +1,5 @@
-import { Mod } from "./Mod.js";
-import { ModContent } from "./ModContent.js";
+import { Mod } from "./TL/Mod.js";
+import { ModContent } from "./TL/ModContent.js";
 
 class MyMod extends Mod {
     Load() {
