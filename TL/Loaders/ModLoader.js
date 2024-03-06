@@ -5,12 +5,8 @@ export class ModLoader {
         this.registeredMod.push(mod);
     }
 
-    static OnLoad() {
+    static Load() {
         this.registeredMod.forEach(m => m.Load());
-    }
-
-    static OnUnload() {
-        this.registeredMod.forEach(m => m.Unload());
     }
 
     static IsMod(mod) {
