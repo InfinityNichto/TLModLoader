@@ -1,5 +1,11 @@
-import { Terraria, ReLogic } from "./ModImports.js";
 import { ModLoader } from "./ModLoader.js";
+import { Terraria, ReLogic } from "./ModImports.js";
+
+const Main = Terraria.Main;
+
+function isNullOrWhiteSpace(str) {
+    return !str || str.trim() === '';
+}
 
 export class ModContent {
     static Load() {
@@ -18,6 +24,30 @@ export class ModContent {
             }
         }
     }
+
+    static HasAsset(name) {
+        if(isNullOrWhiteSpace(name) || !name.includes('/')) {
+            return false;
+        }
+
+        const { modName, subName } = this.splitName(name);
+        if (modName == "Terraria") {
+			return Main.AssetSourceController._staticSources.Single().HasAsset(subName);
+		}
+
+        const { flag, mod } = ModLoader.TryGetMod(modName);
+        if (flag) {
+			return mod.RootContentSource.HasAsset(subName);
+		}
+    }
+
+    static RequestIfExists(name, mode = AssetRequestMode.AsyncLoad) {
+		if (!this.HasAsset(name)) {
+            return { exists: false, asset: null };
+		}
+
+		return { exists: true, asset: this.Request(name, mode) };
+	}
 
     static splitName(name) {
         const firstSlash = name.indexOf('/');

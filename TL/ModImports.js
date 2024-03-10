@@ -40,6 +40,7 @@ export const Terraria = {
 
     Localization: {
         Language: new NativeClass('Terraria.Localization', 'Language'),
+        LanguageManager: new NativeClass('Terraria.Localization', 'LanguageManager'),
         LocalizedText: new NativeClass('Terraria.Localization', 'LocalizedText'),
         GameCulture: new NativeClass('Terraria.Localization', 'GameCulture'),
     },
@@ -141,6 +142,7 @@ export const Microsoft = {
 export const ReLogic = {
     Content: {
         Asset: new NativeClass('ReLogic.Content', 'Asset`1'),
+        AssetRepository: new NativeClass('ReLogic.Content', 'AssetRepository'),
         AssetState: new NativeClass('ReLogic.Content', 'AssetState'),
         AssetRequestMode: new NativeClass('ReLogic.Content', 'AssetRequestMode')
     }
