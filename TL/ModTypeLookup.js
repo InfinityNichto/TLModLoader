@@ -1,11 +1,13 @@
+import { ModType } from "./ModType.js";
+
 function internalTryGetValue(obj, key) {
     if (key in obj) { return { found: true, value: obj[key] };
     } else { return { found: false, value: undefined }; }
 }
 
 export class ModTypeLookup {
-    dict = {};
-    tieredDict = {};
+    static dict = {};
+    static tieredDict = {};
 
     static Register(instance) {
         this.RegisterWithName(instance, instance.Name, instance.FullName);
@@ -19,7 +21,7 @@ export class ModTypeLookup {
 		this.dict[fullName] = instance;
 		const modName = instance.Mod?.Name ?? "Terraria";
 
-        const { flag, subDictionary } = internalTryGetValue(this.this.tieredDict, modName);
+        let { found: flag, value: subDictionary } = internalTryGetValue(this.tieredDict, modName);
 		if (!flag) {
 			subDictionary = (this.tieredDict[modName] = {});
 		}
@@ -36,9 +38,9 @@ export class ModTypeLookup {
     }
 
     static TryGetValue2(modType, modName, contentName) {
-        const { flag, subDictionary } = internalTryGetValue(this.tieredDict, modName);
+        const { found: flag, value: subDictionary } = internalTryGetValue(this.tieredDict, modName);
 		if (!flag) {
-			return { found: false, value: new modType() }
+			return { found: false, value: new ModType() }
 		}
 
 		return internalTryGetValue(subDictionary, contentName);

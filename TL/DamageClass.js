@@ -23,7 +23,7 @@ export class DamageClass extends ModType {
     UseStandardCritCalcs = true;
 
     GetModifierInheritance(damageClass) {
-        return damageClass != this.Generic ? StatInheritanceData.None : StatInheritanceData.Full;
+        return damageClass != DamageClass.Generic ? StatInheritanceData.None : StatInheritanceData.Full;
     }
  
     GetEffectInheritance(damageClass) {

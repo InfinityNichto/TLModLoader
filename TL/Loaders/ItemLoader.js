@@ -1,8 +1,8 @@
 import { Terraria, System, Microsoft } from "../ModImports.js";
-import { Utility } from "../Utilities.js";
 
 const Main = Terraria.Main;
 const Item = Terraria.Item;
+const Recipe = Terraria.Recipe;
 const ID = Terraria.ID;
 const ContentSamples = ID.ContentSamples;
 const Lang = Terraria.Lang;
@@ -12,7 +12,7 @@ const TextureAssets = Terraria.GameContent.TextureAssets;
 const Vector2 = Microsoft.Xna.Framework.Vector2;
 const Array = System.Array;
 
-const Multiply = Vector2["Vector2 Multiply(Vector2 value1, float scaleFactor)"];
+const Add = Vector2["Vector2 Add(Vector2 value1, Vector2 value2)"];
 
 export class ItemLoader {
     static items = [];
@@ -28,29 +28,29 @@ export class ItemLoader {
     }
 
     ResizeArrays() {
-        Array.Resize(TextureAssets.Item, this.ItemCount);
-        Array.Resize(TextureAssets.ItemFlame, this.ItemCount);
+        Array.Resize(TextureAssets.Item, ItemLoader.ItemCount);
+        Array.Resize(TextureAssets.ItemFlame, ItemLoader.ItemCount);
         LoaderUtils.ResetStaticMembers(typeof(ItemID));
         LoaderUtils.ResetStaticMembers(typeof(AmmoID));
         LoaderUtils.ResetStaticMembers(typeof(PrefixLegacy.ItemSets));
-        Array.Resize(Item.cachedItemSpawnsByType, this.ItemCount);
-        Array.Resize(Item.staff, this.ItemCount);
-        Array.Resize(Item.claw, this.ItemCount);
-        Array.Resize(Lang._itemNameCache, this.ItemCount);
-        Array.Resize(Lang._itemTooltipCache, this.ItemCount);
-        Array.Resize(RecipeLoader.FirstRecipeForItem, this.ItemCount);
+        Array.Resize(Item.cachedItemSpawnsByType, ItemLoader.ItemCount);
+        Array.Resize(Item.staff, ItemLoader.ItemCount);
+        Array.Resize(Item.claw, ItemLoader.ItemCount);
+        Array.Resize(Lang._itemNameCache, ItemLoader.ItemCount);
+        Array.Resize(Lang._itemTooltipCache, ItemLoader.ItemCount);
+        Array.Resize(RecipeLoader.FirstRecipeForItem, ItemLoader.ItemCount);
 
-        for (let i = ID.ItemID.Count; i < this.ItemCount; i++) {
+        for (let i = ID.ItemID.Count; i < ItemLoader.ItemCount; i++) {
             Lang._itemNameCache[i] = LocalizedText.Empty;
             Lang._itemTooltipCache[i] = ItemTooltip.None;
             Item.cachedItemSpawnsByType[i] = -1;
         }
 
-        Array.Resize(Main.itemAnimations, this.ItemCount);
+        Array.Resize(Main.itemAnimations, ItemLoader.ItemCount);
         Main.InitializeItemAnimations();
 
         Main.anglerQuestItemNetIDs = Main.anglerQuestItemNetIDs.Concat(
-            this.items.filter(modItem => modItem.IsQuestFish())
+            ItemLoader.items.filter(modItem => modItem.IsQuestFish())
                  .map(modItem => modItem.Type)
         );
     }
@@ -116,7 +116,7 @@ export class ItemLoader {
     }
 
     static SetDefaults() {
-        for (const in this.items) {
+        for (const item of this.items) {
             item.SetDefaults();
             item.AutoDefaults();
         }
@@ -368,7 +368,7 @@ export class ItemLoader {
             }
         
             canCatchOverall = true;
-        }
+        } // Windows has stopped this device because it has reported problems. (Code 43)
 
         return canCatchOverall;
     }
@@ -507,100 +507,77 @@ export class ItemLoader {
     }
  
     static UpdateArmorSet(player, head, body, legs) {
-        if (head.ModItem != null && head.ModItem.IsArmorSet(head, body, legs)) {
+
+        if (this.IsModItem(head.type) != null && this.GetItem(head.type).IsArmorSet(head, body, legs)) {
             head.ModItem.UpdateArmorSet(player);
         }
-        if (body.ModItem != null && body.ModItem.IsArmorSet(head, body, legs)) {
+
+        if (this.IsModItem(body.type) != null && this.GetItem(body.type).IsArmorSet(head, body, legs)) {
             body.ModItem.UpdateArmorSet(player);
         }
-        if (legs.ModItem != null && legs.ModItem.IsArmorSet(head, body, legs)) {
+
+        if (this.IsModItem(legs.type) != null && this.GetItem(legs.type).IsArmorSet(head, body, legs)) {
             legs.ModItem.UpdateArmorSet(player);
-        }
-        ReadOnlySpan<GlobalItem> readOnlySpan = HookUpdateArmorSet.Enumerate();
-        for (int i = 0; i < readOnlySpan.Length; i++) {
-            GlobalItem g = readOnlySpan[i];
-            string set = g.IsArmorSet(head, body, legs);
-            if (!string.IsNullOrEmpty(set)) {
-                g.UpdateArmorSet(player, set);
-            }
         }
     }
  
     static PreUpdateVanitySet(player) {
-        EquipTexture headTexture = EquipLoader.GetEquipTexture(EquipType.Head, player.head);
-        EquipTexture bodyTexture = EquipLoader.GetEquipTexture(EquipType.Body, player.body);
-        EquipTexture legTexture = EquipLoader.GetEquipTexture(EquipType.Legs, player.legs);
+        const headTexture = EquipLoader.GetEquipTexture(EquipType.Head, player.head);
+        const bodyTexture = EquipLoader.GetEquipTexture(EquipType.Body, player.body);
+        const legTexture = EquipLoader.GetEquipTexture(EquipType.Legs, player.legs);
+
         if (headTexture != null && headTexture.IsVanitySet(player.head, player.body, player.legs)) {
             headTexture.PreUpdateVanitySet(player);
         }
+
         if (bodyTexture != null && bodyTexture.IsVanitySet(player.head, player.body, player.legs)) {
             bodyTexture.PreUpdateVanitySet(player);
         }
+
         if (legTexture != null && legTexture.IsVanitySet(player.head, player.body, player.legs)) {
             legTexture.PreUpdateVanitySet(player);
-        }
-        ReadOnlySpan<GlobalItem> readOnlySpan = HookPreUpdateVanitySet.Enumerate();
-        for (int i = 0; i < readOnlySpan.Length; i++) {
-            GlobalItem g = readOnlySpan[i];
-            string set = g.IsVanitySet(player.head, player.body, player.legs);
-            if (!string.IsNullOrEmpty(set)) {
-                g.PreUpdateVanitySet(player, set);
-            }
         }
     }
  
     static UpdateVanitySet(player) {
-        EquipTexture headTexture = EquipLoader.GetEquipTexture(EquipType.Head, player.head);
-        EquipTexture bodyTexture = EquipLoader.GetEquipTexture(EquipType.Body, player.body);
-        EquipTexture legTexture = EquipLoader.GetEquipTexture(EquipType.Legs, player.legs);
+        const headTexture = EquipLoader.GetEquipTexture(EquipType.Head, player.head);
+        const bodyTexture = EquipLoader.GetEquipTexture(EquipType.Body, player.body);
+        const legTexture = EquipLoader.GetEquipTexture(EquipType.Legs, player.legs);
+
         if (headTexture != null && headTexture.IsVanitySet(player.head, player.body, player.legs)) {
             headTexture.UpdateVanitySet(player);
         }
+
         if (bodyTexture != null && bodyTexture.IsVanitySet(player.head, player.body, player.legs)) {
             bodyTexture.UpdateVanitySet(player);
         }
+
         if (legTexture != null && legTexture.IsVanitySet(player.head, player.body, player.legs)) {
             legTexture.UpdateVanitySet(player);
         }
-        ReadOnlySpan<GlobalItem> readOnlySpan = HookUpdateVanitySet.Enumerate();
-        for (int i = 0; i < readOnlySpan.Length; i++) {
-            GlobalItem g = readOnlySpan[i];
-            string set = g.IsVanitySet(player.head, player.body, player.legs);
-            if (!string.IsNullOrEmpty(set)) {
-                g.UpdateVanitySet(player, set);
-            }
-        }
+        
     }
  
     static ArmorSetShadows(player) {
-        EquipTexture headTexture = EquipLoader.GetEquipTexture(EquipType.Head, player.head);
-        EquipTexture bodyTexture = EquipLoader.GetEquipTexture(EquipType.Body, player.body);
-        EquipTexture legTexture = EquipLoader.GetEquipTexture(EquipType.Legs, player.legs);
+        const headTexture = EquipLoader.GetEquipTexture(EquipType.Head, player.head);
+        const bodyTexture = EquipLoader.GetEquipTexture(EquipType.Body, player.body);
+        const legTexture = EquipLoader.GetEquipTexture(EquipType.Legs, player.legs);
+
         if (headTexture != null && headTexture.IsVanitySet(player.head, player.body, player.legs)) {
             headTexture.ArmorSetShadows(player);
         }
+
         if (bodyTexture != null && bodyTexture.IsVanitySet(player.head, player.body, player.legs)) {
             bodyTexture.ArmorSetShadows(player);
         }
+
         if (legTexture != null && legTexture.IsVanitySet(player.head, player.body, player.legs)) {
             legTexture.ArmorSetShadows(player);
         }
-        ReadOnlySpan<GlobalItem> readOnlySpan = HookArmorSetShadows.Enumerate();
-        for (int i = 0; i < readOnlySpan.Length; i++) {
-            GlobalItem g = readOnlySpan[i];
-            string set = g.IsVanitySet(player.head, player.body, player.legs);
-            if (!string.IsNullOrEmpty(set)) {
-                g.ArmorSetShadows(player, set);
-            }
-        }
     }
  
-    static SetMatch(int armorSlot, type, male, equipSlot, robes) {
-        EquipLoader.GetEquipTexture((EquipType)armorSlot, type)?.SetMatch(male, equipSlot, robes);
-        ReadOnlySpan<GlobalItem> readOnlySpan = HookSetMatch.Enumerate();
-        for (int i = 0; i < readOnlySpan.Length; i++) {
-            readOnlySpan[i].SetMatch(armorSlot, type, male, equipSlot, robes);
-        }
+    static SetMatch(armorSlot, type, male, equipSlot, robes) {
+        EquipLoader.GetEquipTexture(armorSlot, type)?.SetMatch(male, equipSlot, robes);
     }
  
     static CanRightClick(item) {
@@ -624,6 +601,7 @@ export class ItemLoader {
         if (ConsumeItem(item, player) && --item.stack == 0) {
             item.SetDefaults();
         }
+
         SoundEngine.PlaySound(7);
         Main.stackSplit = 30;
         Main.mouseRightRelease = false;
@@ -652,7 +630,7 @@ export class ItemLoader {
         }
 
         const numTransferred = StackItems(destination, source, infiniteSource);
-        return { result: true, numTransferred };
+        return { result: true, numTransferred: numTransferred };
     }
  
     static StackItems(destination, source, infiniteSource = false, numToTransfer = null) {
@@ -742,20 +720,14 @@ export class ItemLoader {
     }
 
  
-    // static WingUpdate(player, inUse) {
-    //     if (player.wings <= 0) {
-    //         return false;
-    //     }
+    static WingUpdate(player, inUse) {
+        if (player.wings <= 0) {
+            return false;
+        }
 
-    //     const retVal = EquipLoader.GetEquipTexture(EquipType.Wings, player.wings)?.WingUpdate(player, inUse);
-    //     ReadOnlySpan<GlobalItem> readOnlySpan = HookWingUpdate.Enumerate();
-    //     for (int i = 0; i < readOnlySpan.Length; i++) {
-    //         GlobalItem obj = readOnlySpan[i];
-    //         bool? flag = retVal;
-    //         retVal = obj.WingUpdate(player.wings, player, inUse) | flag;
-    //     }
-    //     return retVal.GetValueOrDefault();
-    // }
+        const retVal = EquipLoader.GetEquipTexture(EquipType.Wings, player.wings)?.WingUpdate(player, inUse);
+        return retVal.GetValueOrDefault();
+    }
  
     static Update(item, gravity, maxFallSpeed) {
         this.GetItem(item.type)?.Update(gravity, maxFallSpeed);
@@ -850,7 +822,7 @@ export class ItemLoader {
         
         modOrigin.X *= player.direction;
         modOrigin.Y *= 0 - player.gravDir;
-        origin += modOrigin;
+        origin = Add(origin, modOrigin);
     }
  
     static CanEquipAccessory(item, slot, modded) {
@@ -862,13 +834,18 @@ export class ItemLoader {
         return true;
     }
  
-    static CanAccessoryBeEquippedWith(equippedItem, incomingItem) {
-        const player = Main.player[Main.myPlayer];
-        if (CanAccessoryBeEquippedWith(equippedItem, incomingItem, player)) {
-            return CanAccessoryBeEquippedWith(incomingItem, equippedItem, player);
+    static CanAccessoryBeEquippedWith(equippedItem, incomingItem, player) {
+        equippedItem = this.GetItem(equippedItem.type);
+        if (equippedItem != null && !equippedItem.CanAccessoryBeEquippedWith(equippedItem, incomingItem, player)) {
+            return false;
         }
 
-        return false;
+        incomingItem = this.GetItem(incomingItem.type);
+        if (incomingItem != null && !incomingItem.CanAccessoryBeEquippedWith(equippedItem, incomingItem, player)) {
+            return false;
+        }
+        
+        return true;
     }
  
     static ExtractinatorUse(resultType, resultStack, extractType, extractinatorBlockType) {
@@ -881,7 +858,7 @@ export class ItemLoader {
 
  
     static IsAnglerQuestAvailable(itemID, notAvailable) {
-        const modItem = GetItem(itemID);
+        const modItem = this.GetItem(itemID);
         if (modItem != null) {
             notAvailable |= !modItem.IsAnglerQuestAvailable();
         }
@@ -890,7 +867,7 @@ export class ItemLoader {
     static AnglerChat(type) {
         const chat = "";
         const catchLocation = "";
-        GetItem(type)?.AnglerQuestChat(chat, catchLocation);
+        this.GetItem(type)?.AnglerQuestChat(chat, catchLocation);
 
         return chat + "\n\n(" + catchLocation + ")";
     }
@@ -930,7 +907,7 @@ export class ItemLoader {
         if (item.prefix >= ID.PrefixID.Count && prefixlineIndex != -1) {
             const tooltipLines = PrefixLoader.GetPrefix(item.prefix)?.GetTooltipLines(item);
             if (tooltipLines != null) {
-                for (const line in tooltipLines) {
+                for (const line of tooltipLines) {
                     tooltips.splice(prefixlineIndex, 0, line);
                     prefixlineIndex++;
                 }
@@ -940,12 +917,14 @@ export class ItemLoader {
         this.GetItem(item.type)?.ModifyTooltips(tooltips);
 
         tooltips.RemoveAll((x) => !x.Visible);
-        numTooltips = tooltips.Count;
-        text = new string[numTooltips];
-        modifier = new bool[numTooltips];
-        badModifier = new bool[numTooltips];
+        numTooltips = tooltips.length;
+        text = [];
+        modifier = [];
+        badModifier = [];
         oneDropLogo = -1;
-        overrideColor = new Color[numTooltips];
+
+        let overrideColor = [];
+    
         for (let i = 0; i < numTooltips; i++) {
             text[i] = tooltips[i].Text;
             modifier[i] = tooltips[i].IsModifier;
@@ -955,7 +934,8 @@ export class ItemLoader {
             }
             overrideColor[i] = tooltips[i].OverrideColor;
         }
-        return tooltips;
+
+        return { tooltips: tooltips, overrideColor: overrideColor };
     }
  
     static NeedsModSaving(item) {

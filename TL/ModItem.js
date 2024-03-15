@@ -61,7 +61,7 @@ export class ModItem extends ModEntityType {
     AutoStaticDefaults() {
 		TextureAssets.Item[this.Item.type] = ModContent.Request(this.Texture);
     
-        const { flag, flameTexture } = ModContent.RequestIfExists(this.Texture + "_Flame", AssetRequestMode.AsyncLoad);
+        const { exists: flag, asset: flameTexture } = ModContent.RequestIfExists(this.Texture + "_Flame", AssetRequestMode.AsyncLoad);
 		if (flag) {
 			TextureAssets.ItemFlame[this.Item.type] = flameTexture;
 		}

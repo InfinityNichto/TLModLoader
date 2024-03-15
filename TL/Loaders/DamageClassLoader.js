@@ -8,7 +8,7 @@ export class DamageClassLoader {
     static get DamageClassCount() { return this.DamageClasses.length; }
  
     constructor () {
-        this.DamageClasses = [
+        DamageClassLoader.DamageClasses = [
             DamageClass.Default,
             DamageClass.Generic,
             DamageClass.Melee,
@@ -21,9 +21,9 @@ export class DamageClassLoader {
             DamageClass.Throwing
         ]
 
-        this.DefaultClassCount = this.DamageClasses.length;
-        this.RegisterDefaultClasses();
-        this.ResizeArrays();
+        DamageClassLoader.DefaultClassCount = DamageClassLoader.DamageClasses.length;
+        DamageClassLoader.RegisterDefaultClasses();
+        DamageClassLoader.ResizeArrays();
     }
  
     static Add(damageClass) {
