@@ -2,62 +2,32 @@ import { Microsoft } from "../TL/ModImports.js";
 
 export class Utility {
 	static Vector2(x, y) {
-		const vect = Microsoft.Xna.Framework.Vector2.new();
-	 
-		vect.X = x;
-		vect.Y = y;
-	 
-		return vect;
+		return Microsoft.Xna.Framework.Vector2.new()["void .ctor(float x, float y)"](x, y);
 	}
 
 	static Vector3(x, y, z) {
-		const vect = Microsoft.Xna.Framework.Vector3.new();
-	 
-		vect.X = x;
-		vect.Y = y;
-		vect.Z = z;
-	 
-		return vect;
+		return Microsoft.Xna.Framework.Vector3.new()["void .ctor(float x, float y, float z)"](x, y, z);
 	}
 
 	static Vector4(x, y, z, w) {
-		const vect = Microsoft.Xna.Framework.Vector4.new();
-	 
-		vect.X = x;
-		vect.Y = y;
-		vect.Z = z;
-		vect.W = w;
-	 
-		return vect;
+		return Microsoft.Xna.Framework.Vector4.new()["void .ctor(float x, float y, float z, float w)"](x, y, z, w);
 	}
 
 	static Rectangle(x, y, width, height) {
-		const rect = Microsoft.Xna.Framework.Rectangle.new();
-
-		rect.X = x;
-		rect.Y = y;
-		rect.Width = width;
-		rect.Height = height;
-		
-		return rect;
+		return Microsoft.Xna.Framework.Rectangle.new()["void .ctor(int x, int y, int width, int height)"](x, y, width, height);
 	}
 
 	static Point(x, y) {
-		const point = Microsoft.Xna.Framework.Point.new();
-
-		point.X = x;
-		point.Y = y;
-
-		return point;
+		return Microsoft.Xna.Framework.Point.new()["void .ctor(int x, int y)"](x, y);
 	}
 
 	static Color(isFloat, r, g, b, a) {
 		const color = Microsoft.Xna.Framework.Graphics.Color.new();
 
 		if (isFloat) {
-			return color["void .ctor(float r, float g, float b, float a"](r, g, b, a);
+			return color["void .ctor(float r, float g, float b, float a)"](r, g, b, a);
 		} else {
-			return color["void .ctor(int r, int g, int b, int a"](r, g, b, a);
+			return color["void .ctor(int r, int g, int b, int a)"](r, g, b, a);
 		}
 	}
 

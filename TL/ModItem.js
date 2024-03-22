@@ -23,7 +23,7 @@ export class ModItem extends ModEntityType {
 
     CreateTemplateInstance() {
         this.ModItemTemplate = this.constructor;
-        return NativeClass("Terraria", "Item").new();
+        return NativeClass("Terraria", "Item").new()["void .ctor()"]();
     }
 
     Register() {

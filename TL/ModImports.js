@@ -156,6 +156,28 @@ export const System = {
     Array: new NativeClass('System', 'Array'),
 
     IO: {
-        File: new NativeClass('System.IO', 'File')
+        File: new NativeClass('System.IO', 'File'),
+        Directory: new NativeClass('System.IO', 'Directory'),
+        Path: new NativeClass('System.IO', 'Path'),
+        BinaryWriter: new NativeClass('System.IO', 'BinaryWriter'),
+        BinaryReader: new NativeClass('System.IO', 'BinaryReader'),
+        Stream: new NativeClass('System.IO', 'Stream'),
+        MemoryStream: new NativeClass('System.IO', 'MemoryStream'),
+        SeekOrigin: new NativeClass('System.IO', 'SeekOrigin'),
+
+        Compression: {
+            CompressionMode: new NativeClass('System.IO.Compression', 'CompressionMode'),
+            DeflateStream: new NativeClass('System.IO.Compression', 'DeflateStream')
+        }
+    },
+
+    Text: {
+        Encoding: new NativeClass('System.IO', 'Encoding')
+    },
+
+    Security: {
+        Cryptography: {
+            SHA1: new NativeClass('System.Security.Cryptography', 'SHA1')
+        }
     }
 }

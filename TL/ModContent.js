@@ -6,25 +6,25 @@ const Asset = ReLogic.Content.Asset;
 const AssetState = ReLogic.Content.AssetState;
 const AssetRequestMode = ReLogic.Content.AssetRequestMode;
 
-function NativeRequest(type, assetName, mode = AssetRequestMode.AsyncLoad) {
-    if (Main.Assets._readers == null) {
+function Request(type, repository, assetName, mode = AssetRequestMode.AsyncLoad) {
+    if (repository._readers == null) {
         mode = AssetRequestMode.DoNotLoad;
     }
 
-    Main.Assets.ThrowIfDisposed();
+    repository.ThrowIfDisposed();
     let asset = null;
 
-    if (Main.Assets._assets.ContainsKey(assetName)) {
-        asset = Main.Assets._assets[assetName];
+    if (repository._assets.ContainsKey(assetName)) {
+        asset = repository._assets[assetName];
     }
 
     if (asset == null) {
         asset = Asset.makeGeneric(type).new(assetName);
-        Main.Assets._assets[assetName] = asset;
+        repository._assets[assetName] = asset;
     }
 
     if (asset.State == AssetState.NotLoaded) {
-        Main.Assets.LoadAsset(asset, mode);
+        repository.LoadAsset(asset, mode);
     }
 
     if (mode == AssetRequestMode.ImmediateLoad) {
@@ -48,11 +48,11 @@ export class ModContent {
         const { domain: modName, subName: path } = this.splitName(name);
 
         if (modName == "Terraria") {
-            return NativeRequest(type, name, mode);
+            return NativeRequest(type, Main.Assets, name, mode);
         } else {
             const mod = ModLoader.GetModByName(modName);
             if (mod) {
-                return mod.Assets.Request(path, mode);
+                return NativeRequest(type, mod.Assets, path, mode);
             }
         }
     }

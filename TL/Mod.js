@@ -9,8 +9,8 @@ export class Mod {
 	Name = "";
 	Version = "";
 	Content = [];
-	RootContentSource;
-	Assets = AssetRepository.new();
+	AssetSourceController;
+	ContentSource;
 	ModdedKeys = new Set();
 
 	loading = false;
@@ -39,14 +39,22 @@ export class Mod {
         if (!this.loading) {
             throw new Error(`[${this.constructor.name}] Cannot add content when mod is not loading.`);
         }
-        if (!Content.IsLoadingEnabled(this)) {
+        if (!this.Content.IsLoadingEnabled(this)) {
             return false;
         }
-        Content.Load(this);
+        this.Content.Load(this);
         this.Content.push(content);
 
         return true;
     }
+
+	// PrepareAssets() {
+    //     this.RootContentSource = CreateDefaultContentSource();
+    //     Assets = new AssetRepository(((IServiceProvider)((Game)Main.instance).Services).Get<AssetReaderCollection>(), new IContentSource[1] { RootContentSource })
+    //     {
+    //         AssetLoadFailHandler = OnceFailedLoadingAnAsset
+    //     };
+    // }
 
 	Load() { }
 
