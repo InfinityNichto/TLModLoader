@@ -110,6 +110,10 @@ export const Terraria = {
 
     IO: {
         WorldFile: new NativeClass('Terraria.IO', 'WorldFile'),
+    },
+
+    Initializers: {
+        AssetInitializer: new NativeClass('Terraria.Initializers', 'AssetInitializer')
     }
 }
 

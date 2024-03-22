@@ -1,4 +1,5 @@
 import { ModLoader } from "./Loaders/ModLoader.js";
+import { ModContentSource } from "./Assets/ModContentSource.js";
 import { Terraria, ReLogic } from "./ModImports.js";
 
 const LocalizationText = Terraria.Localization.LocalizedText;
@@ -6,8 +7,10 @@ const LanguageManager = Terraria.Localization.LanguageManager;
 const AssetRepository = ReLogic.Content.AssetRepository;
 
 export class Mod {
-	Name = "";
-	Version = "";
+	get Name() { this.File.Name; }
+
+	File;
+	fileHandle;
 	Content = [];
 	AssetSourceController;
 	ContentSource;
@@ -48,13 +51,33 @@ export class Mod {
         return true;
     }
 
-	// PrepareAssets() {
-    //     this.RootContentSource = CreateDefaultContentSource();
-    //     Assets = new AssetRepository(((IServiceProvider)((Game)Main.instance).Services).Get<AssetReaderCollection>(), new IContentSource[1] { RootContentSource })
-    //     {
-    //         AssetLoadFailHandler = OnceFailedLoadingAnAsset
-    //     };
-    // }
+	GetFileNames() {
+        return this.File?.GetFileNames();
+    }
+ 
+    GetFileBytes(name) {
+        return this.File?.GetBytes(name);
+    }
+ 
+    GetFileStream(name, newFileStream = false) {
+        return this.File?.GetStream(name, newFileStream);
+    }
+ 
+    FileExists(name) {
+        if (this.File != null) {
+            return this.File.HasFile(name);
+        }
+
+        return false;
+	}
+
+	PrepareAssets() {
+        this.ContentSource = new ModContentSource(this.File);
+        Assets = new AssetRepository(((IServiceProvider)((Game)Main.instance).Services).Get<AssetReaderCollection>(), new IContentSource[1] { RootContentSource })
+        {
+            AssetLoadFailHandler = OnceFailedLoadingAnAsset
+        };
+    }
 
 	Load() { }
 

@@ -1,6 +1,6 @@
-import { ModFile  } from "../Core/ModFile.js";
-import { ReLogic, System } from "../ModImports.js";
+import { Terraria, ReLogic, System } from "../ModImports.js";
 
+const AssetInitializer = Terraria.Initializers.AssetInitializer;
 const ContentSource = ReLogic.Content.Sources.ContentSource;
 const Path = System.IO.Path;
 
@@ -8,7 +8,8 @@ const GetExtension = Path["string GetExtension(string path)"];
 
 export class ModContentSource {
     constructor(file) {
-        this.file = file ?? new Error("null argument");
+        this.base = ContentSource.new();
+        this.file = file ?? new Error("null file argument");
         
         const assetNames = [];
         for (const entry of this.file) {
@@ -20,7 +21,7 @@ export class ModContentSource {
             }
         }
 
-        ContentSource.SetAssetNames(assetNames);
+        this.base.SetAssetNames(assetNames);
     }
     
     OpenStream(assetName) {
