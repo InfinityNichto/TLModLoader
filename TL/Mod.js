@@ -2,6 +2,7 @@ import { ModLoader } from "./Loaders/ModLoader.js";
 import { ModContentSource } from "./Assets/ModContentSource.js";
 import { Terraria, ReLogic } from "./ModImports.js";
 
+const Main = Terraria.Main;
 const LocalizationText = Terraria.Localization.LocalizedText;
 const LanguageManager = Terraria.Localization.LanguageManager;
 const AssetRepository = ReLogic.Content.AssetRepository;
@@ -13,8 +14,10 @@ export class Mod {
 	File;
 	fileHandle;
 	Content = [];
+	Assets;
 	AssetSourceController;
 	ContentSource;
+	equipTextures;
 	ModdedKeys = new Set();
 
 	loading = false;
@@ -74,7 +77,7 @@ export class Mod {
 
 	PrepareAssets() {
         this.ContentSource = new ModContentSource(this.File);
-        Assets = AssetRepository.new()
+        this.Assets = AssetRepository.new()
 			["void .ctor(AssetReaderCollection readers, IEnumerable sources)"]
 			(Main.instance.Services.GetService(AssetReaderCollection), this.ContentSource)
     }

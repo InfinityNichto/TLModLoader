@@ -1,7 +1,7 @@
 export function extendPrototypes() {
     Object.defineProperties(Uint8Array.prototype, {
         Length: {
-            get: () => {
+            get: function() {
                 return this.length;
             }
         }
@@ -9,16 +9,16 @@ export function extendPrototypes() {
 
     Object.defineProperties(Object.prototype, {
         TryGetValue: {
-            value: (key) => {
+            value: function(key) {
                 if (this.hasOwnProperty(key)) {
-                    return { success: true, value: this[key] };
+                    return { found: true, value: this[key] };
                 } else {
-                    return { success: false, value: undefined };
+                    return { found: false, value: undefined };
                 }
             },
 
             writable: true,
             configurable: true
         }
-    });  
+    });
 }

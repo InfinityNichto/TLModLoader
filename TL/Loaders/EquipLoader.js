@@ -1,7 +1,9 @@
-import { EquipType } from "../EquipType.js";
-import { Terraria, System } from "../ModImports.js";
+import { EquipType, TextureMap } from "../EquipType.js";
+import { Terraria, System, Microsoft } from "../ModImports.js";
 
 const Item = Terraria.Item;
+const ArmorIDs = Terraria.ID.ArmorIDs;
+const Texture2D = Microsoft.Xna.Framework.Graphics.Texture2D;
 const Array = System.Array;
 
 export class EquipLoader {
@@ -12,17 +14,17 @@ export class EquipLoader {
     static EquipTypes = [];
  
     constructor() {
-        Object.keys(EquipType).forEach(k => EquipLoader.EquipTypes.push(obj[k]));
+        Object.keys(EquipType).forEach(k => this.EquipTypes.push(obj[k]));
 
         const equipTypes = EquipTypes;
         for (const type of equipTypes) {
-            EquipLoader.nextEquip[type] = EquipLoader.GetNumVanilla(type);
-            EquipLoader.equipTextures[type] = {};
+            this.nextEquip[type] = this.GetNumVanilla(type);
+            this.equipTextures[type] = {};
         }
 
-        EquipLoader.slotToId[EquipType.Head] = {};
-        EquipLoader.slotToId[EquipType.Body] = {};
-        EquipLoader.slotToId[EquipType.Legs] = {};
+        this.slotToId[EquipType.Head] = {};
+        this.slotToId[EquipType.Body] = {};
+        this.slotToId[EquipType.Legs] = {};
     }
  
     static ReserveEquipID(type) {
@@ -70,9 +72,9 @@ export class EquipLoader {
         for (const type of equipTypes) {
             for (const [slot, equipTexture] of Object.entries(this.equipTextures[type])) {
                 const texture = equipTexture.Texture;
-                GetTextureArray(type) = ModContent.Request<Texture2D>(texture);
-                switch (type)
-                {
+                GetTextureArray(type) = ModContent.Request(Texture2D, texture);
+
+                switch (type) {
                 case EquipType.Body:
                     ArmorIDs.Body.Sets.UsesNewFramingCode[slot] = true;
                     break;
@@ -99,190 +101,207 @@ export class EquipLoader {
     }
  
     static GetNumVanilla(type) {
-        switch(type) {
-            EquipType.Head = ArmorIDs.Head.Count,
-            EquipType.Body = ArmorIDs.Body.Count,
-            EquipType.Legs = ArmorIDs.Legs.Count,
-            EquipType.HandsOn = ArmorIDs.HandOn.Count,
-            EquipType.HandsOff = ArmorIDs.HandOff.Count,
-            EquipType.Back = ArmorIDs.Back.Count,
-            EquipType.Front = ArmorIDs.Front.Count,
-            EquipType.Shoes = ArmorIDs.Shoe.Count,
-            EquipType.Waist = ArmorIDs.Waist.Count,
-            EquipType.Wings = ArmorIDs.Wing.Count,
-            EquipType.Shield = ArmorIDs.Shield.Count,
-            EquipType.Neck = ArmorIDs.Neck.Count,
-            EquipType.Face = ArmorIDs.Face.Count,
-            EquipType.Beard = ArmorIDs.Beard.Count,
-            EquipType.Balloon = ArmorIDs.Balloon.Count,
-            _ => 0, 
-    }
- 
-    internal static Asset<Texture2D>[] GetTextureArray(EquipType type)
-    {
-        return type switch
-        {
-            EquipType.Head => TextureAssets.ArmorHead, 
-            EquipType.Body => TextureAssets.ArmorBodyComposite, 
-            EquipType.Legs => TextureAssets.ArmorLeg, 
-            EquipType.HandsOn => TextureAssets.AccHandsOnComposite, 
-            EquipType.HandsOff => TextureAssets.AccHandsOffComposite, 
-            EquipType.Back => TextureAssets.AccBack, 
-            EquipType.Front => TextureAssets.AccFront, 
-            EquipType.Shoes => TextureAssets.AccShoes, 
-            EquipType.Waist => TextureAssets.AccWaist, 
-            EquipType.Wings => TextureAssets.Wings, 
-            EquipType.Shield => TextureAssets.AccShield, 
-            EquipType.Neck => TextureAssets.AccNeck, 
-            EquipType.Face => TextureAssets.AccFace, 
-            EquipType.Beard => TextureAssets.AccBeard, 
-            EquipType.Balloon => TextureAssets.AccBalloon, 
-            _ => null, 
-        };
-    }
- 
-    internal static void SetSlot(Item item)
-    {
-        if (!idToSlot.TryGetValue(item.type, out var slots))
-        {
-            return;
-        }
-        foreach (KeyValuePair<EquipType, int> entry in slots)
-        {
-            int slot = entry.Value;
-            switch (entry.Key)
-            {
+        switch (type) {
             case EquipType.Head:
-                item.headSlot = slot;
+                count = ArmorIDs.Head.Count;
                 break;
             case EquipType.Body:
-                item.bodySlot = slot;
+                count = ArmorIDs.Body.Count;
                 break;
             case EquipType.Legs:
-                item.legSlot = slot;
+                count = ArmorIDs.Legs.Count;
                 break;
             case EquipType.HandsOn:
-                item.handOnSlot = slot;
+                count = ArmorIDs.HandOn.Count;
                 break;
             case EquipType.HandsOff:
-                item.handOffSlot = slot;
+                count = ArmorIDs.HandOff.Count;
                 break;
             case EquipType.Back:
-                item.backSlot = slot;
+                count = ArmorIDs.Back.Count;
                 break;
             case EquipType.Front:
-                item.frontSlot = slot;
+                count = ArmorIDs.Front.Count;
                 break;
             case EquipType.Shoes:
-                item.shoeSlot = slot;
+                count = ArmorIDs.Shoe.Count;
                 break;
             case EquipType.Waist:
-                item.waistSlot = slot;
+                count = ArmorIDs.Waist.Count;
                 break;
             case EquipType.Wings:
-                item.wingSlot = slot;
+                count = ArmorIDs.Wing.Count;
                 break;
             case EquipType.Shield:
-                item.shieldSlot = slot;
+                count = ArmorIDs.Shield.Count;
                 break;
             case EquipType.Neck:
-                item.neckSlot = slot;
+                count = ArmorIDs.Neck.Count;
                 break;
             case EquipType.Face:
-                item.faceSlot = slot;
+                count = ArmorIDs.Face.Count;
                 break;
             case EquipType.Beard:
-                item.beardSlot = slot;
+                count = ArmorIDs.Beard.Count;
                 break;
             case EquipType.Balloon:
-                item.balloonSlot = slot;
+                count = ArmorIDs.Balloon.Count;
                 break;
+            default:
+                return 0;
+        }
+    }
+ 
+    static GetTextureArray(type) {
+        return TextureMap[type] || null;
+    }
+ 
+    static SetSlot(item) {
+        const { found: flag, value: slots } = this.idToSlot.TryGetValue(item.type);
+        if (!flag) {
+            return;
+        }
+
+        for (const [key, value] of Object.entries(slots)) {
+            const slot = value;
+            switch (key) {
+                case EquipType.Head:
+                    item.headSlot = slot;
+                    break;
+                case EquipType.Body:
+                    item.bodySlot = slot;
+                    break;
+                case EquipType.Legs:
+                    item.legSlot = slot;
+                    break;
+                case EquipType.HandsOn:
+                    item.handOnSlot = slot;
+                    break;
+                case EquipType.HandsOff:
+                    item.handOffSlot = slot;
+                    break;
+                case EquipType.Back:
+                    item.backSlot = slot;
+                    break;
+                case EquipType.Front:
+                    item.frontSlot = slot;
+                    break;
+                case EquipType.Shoes:
+                    item.shoeSlot = slot;
+                    break;
+                case EquipType.Waist:
+                    item.waistSlot = slot;
+                    break;
+                case EquipType.Wings:
+                    item.wingSlot = slot;
+                    break;
+                case EquipType.Shield:
+                    item.shieldSlot = slot;
+                    break;
+                case EquipType.Neck:
+                    item.neckSlot = slot;
+                    break;
+                case EquipType.Face:
+                    item.faceSlot = slot;
+                    break;
+                case EquipType.Beard:
+                    item.beardSlot = slot;
+                    break;
+                case EquipType.Balloon:
+                    item.balloonSlot = slot;
+                    break;
             }
         }
     }
  
-    internal static int GetPlayerEquip(Player player, EquipType type)
-    {
-        return type switch
-        {
-            EquipType.Head => player.head, 
-            EquipType.Body => player.body, 
-            EquipType.Legs => player.legs, 
-            EquipType.HandsOn => player.handon, 
-            EquipType.HandsOff => player.handoff, 
-            EquipType.Back => player.back, 
-            EquipType.Front => player.front, 
-            EquipType.Shoes => player.shoe, 
-            EquipType.Waist => player.waist, 
-            EquipType.Wings => player.wings, 
-            EquipType.Shield => player.shield, 
-            EquipType.Neck => player.neck, 
-            EquipType.Face => player.face, 
-            EquipType.Beard => player.beard, 
-            EquipType.Balloon => player.balloon, 
-            _ => 0, 
-        };
+    static GetPlayerEquip(player, type) {
+        switch (type) {
+            case EquipType.Head:
+                return player.head;
+            case EquipType.Body:
+                return player.body;
+            case EquipType.Legs:
+                return player.legs;
+            case EquipType.HandsOn:
+                return player.handon;
+            case EquipType.HandsOff:
+                return player.handoff;
+            case EquipType.Back:
+                return player.back;
+            case EquipType.Front:
+                return player.front;
+            case EquipType.Shoes:
+                return player.shoe;
+            case EquipType.Waist:
+                return player.waist;
+            case EquipType.Wings:
+                return player.wings;
+            case EquipType.Shield:
+                return player.shield;
+            case EquipType.Neck:
+                return player.neck;
+            case EquipType.Face:
+                return player.face;
+            case EquipType.Beard:
+                return player.beard;
+            case EquipType.Balloon:
+                return player.balloon;
+            default:
+                return 0;
+        }
     }
  
-    public static int AddEquipTexture(Mod mod, string texture, EquipType type, ModItem item = null, string name = null, EquipTexture equipTexture = null)
-    {
-        if (!mod.loading)
-        {
-            throw new Exception("AddEquipTexture can only be called from Mod.Load or Mod.Autoload");
+    static AddEquipTexture(mod, texture, type, item = null, name = null, equipTexture = null) {
+        if (name == null && item == null) {
+            throw new Error("null arguments. AddEquipTexture requires either an item or a name be provided");
         }
-        if (name == null && item == null)
-        {
-            throw new Exception("AddEquipTexture requires either an item or a name be provided");
-        }
-        if (equipTexture == null)
-        {
+
+        if (equipTexture == null) {
             equipTexture = new EquipTexture();
         }
-        ModContent.Request<Texture2D>(texture);
+
+        ModContent.Request(Texture2D, texture);
         equipTexture.Texture = texture;
         equipTexture.Name = name ?? item.Name;
         equipTexture.Type = type;
         equipTexture.Item = item;
-        int num2 = (equipTexture.Slot = ReserveEquipID(type));
-        int slot = num2;
-        equipTextures[type][slot] = equipTexture;
-        mod.equipTextures[Tuple.Create(name ?? item.Name, type)] = equipTexture;
-        if (item != null)
-        {
-            if (!idToSlot.TryGetValue(item.Type, out var slots))
-            {
-                slots = (idToSlot[item.Type] = new Dictionary<EquipType, int>());
+
+        const slot = (equipTexture.Slot = this.ReserveEquipID(type));
+        this.equipTextures[type][slot] = equipTexture;
+        mod.equipTextures[[name ?? item.Name, type]] = equipTexture;
+        
+        if (item != null) {
+            const { found: flag, value: slots } = this.idToSlot.TryGetValue(item.Type);
+            if (!found) {
+                slots = (this.idToSlot[item.Type] = {});
             }
             slots[type] = slot;
-            if (type == EquipType.Head || type == EquipType.Body || type == EquipType.Legs)
-            {
-                slotToId[type][slot] = item.Type;
+
+            if (type == EquipType.Head || type == EquipType.Body || type == EquipType.Legs) {
+                this.slotToId[type][slot] = item.Type;
             }
         }
+
         return slot;
     }
  
-    public static EquipTexture GetEquipTexture(Mod mod, string name, EquipType type)
-    {
-        if (!mod.equipTextures.TryGetValue(Tuple.Create(name, type), out var texture))
-        {
+    static GetEquipTexture(mod, name, type) {
+        const { found: flag, value: texture } = mod.equipTextures.TryGetValue([name, type]);
+        if (!flag) {
             return null;
         }
+
         return texture;
     }
  
-    public static int GetEquipSlot(Mod mod, string name, EquipType type)
-    {
-        return GetEquipTexture(mod, name, type)?.Slot ?? (-1);
+    static GetEquipSlot(mod, name, type) {
+        return this.GetEquipTexture(mod, name, type)?.Slot ?? -1;
     }
  
-    public static void EquipFrameEffects(Player player)
-    {
-        EquipType[] equipTypes = EquipTypes;
-        foreach (EquipType type in equipTypes)
-        {
-            int slot = GetPlayerEquip(player, type);
-            GetEquipTexture(type, slot)?.FrameEffects(player, type);
+    static EquipFrameEffects(player) {
+        for (const type in EquipTypes) {
+            const slot = this.GetPlayerEquip(player, EquipType[type]);
+            this.GetEquipTexture(type, slot)?.FrameEffects(player, type);
         }
     }
 }

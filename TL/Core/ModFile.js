@@ -11,6 +11,7 @@ const MemoryStream = System.IO.MemoryStream;
 const CompressionMode = System.IO.Compression.CompressionMode;
 const DeflateStream = System.IO.Compression.DeflateStream;
 const Encoding = System.Text.Encoding;
+const SHA1 = System.Security.Cryptography.SHA1;
 
 const Create = File["FileStream Create(string path)"];
 const CreateDirectory = Directory["DirectoryInfo CreateDirectory(string path)"];

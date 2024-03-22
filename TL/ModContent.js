@@ -6,7 +6,7 @@ const Asset = ReLogic.Content.Asset;
 const AssetState = ReLogic.Content.AssetState;
 const AssetRequestMode = ReLogic.Content.AssetRequestMode;
 
-function Request(type, repository, assetName, mode = AssetRequestMode.AsyncLoad) {
+function NativeRequest(type, repository, assetName, mode = AssetRequestMode.AsyncLoad) {
     if (repository._readers == null) {
         mode = AssetRequestMode.DoNotLoad;
     }
@@ -69,7 +69,7 @@ export class ModContent {
 
         const { found: flag, value: mod } = ModLoader.TryGetMod(modName);
         if (flag) {
-			return mod.RootContentSource.HasAsset(subName);
+			return mod.ContentSource.HasAsset(subName);
 		}
     }
 
