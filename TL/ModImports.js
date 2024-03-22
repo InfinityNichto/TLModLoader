@@ -144,7 +144,11 @@ export const ReLogic = {
         Asset: new NativeClass('ReLogic.Content', 'Asset`1'),
         AssetRepository: new NativeClass('ReLogic.Content', 'AssetRepository'),
         AssetState: new NativeClass('ReLogic.Content', 'AssetState'),
-        AssetRequestMode: new NativeClass('ReLogic.Content', 'AssetRequestMode')
+        AssetRequestMode: new NativeClass('ReLogic.Content', 'AssetRequestMode'),
+
+        Sources: {
+            ContentSource: new NativeClass('ReLogic.Content', 'ContentSource')
+        }
     }
 }
 
