@@ -5,6 +5,7 @@ import { Terraria, ReLogic } from "./ModImports.js";
 const LocalizationText = Terraria.Localization.LocalizedText;
 const LanguageManager = Terraria.Localization.LanguageManager;
 const AssetRepository = ReLogic.Content.AssetRepository;
+const AssetReaderCollection = ReLogic.Content.AssetReaderCollection;
 
 export class Mod {
 	get Name() { this.File.Name; }
@@ -73,10 +74,9 @@ export class Mod {
 
 	PrepareAssets() {
         this.ContentSource = new ModContentSource(this.File);
-        Assets = new AssetRepository(((IServiceProvider)((Game)Main.instance).Services).Get<AssetReaderCollection>(), new IContentSource[1] { RootContentSource })
-        {
-            AssetLoadFailHandler = OnceFailedLoadingAnAsset
-        };
+        Assets = AssetRepository.new()
+			["void .ctor(AssetReaderCollection readers, IEnumerable sources)"]
+			(Main.instance.Services.GetService(AssetReaderCollection), this.ContentSource)
     }
 
 	Load() { }
