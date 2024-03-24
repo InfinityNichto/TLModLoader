@@ -3,13 +3,14 @@ import { ModContent } from "./ModContent.js";
 import { ModTypeLookup } from "./ModTypeLookup.js";
 import { DamageClass } from "./DamageClass.js";
 import { DamageClassLoader } from "./Loaders/DamageClassLoader.js";
-import { Terraria, ReLogic } from "./ModImports.js";
+import { Terraria, Microsoft, ReLogic } from "./ModImports.js";
 
 const Item = Terraria.Item;
 const Recipe = Terraria.Recipe;
 const ID = Terraria.ID;
 const ContentSamples = ID.ContentSamples;
 const TextureAssets = Terraria.GameContent.TextureAssets;
+const Texture2D = Microsoft.Xna.Framework.Graphics.Texture2D;
 const AssetRequestMode = ReLogic.Content.AssetRequestMode;
 
 export class ModItem extends ModEntityType {
@@ -59,9 +60,9 @@ export class ModItem extends ModEntityType {
     }
 
     AutoStaticDefaults() {
-		TextureAssets.Item[this.Item.type] = ModContent.Request(this.Texture);
+		TextureAssets.Item[this.Item.type] = ModContent.Request(Texture2D, this.Texture);
     
-        const { exists: flag, asset: flameTexture } = ModContent.RequestIfExists(this.Texture + "_Flame", AssetRequestMode.AsyncLoad);
+        const { exists: flag, asset: flameTexture } = ModContent.RequestIfExists(Texture2D, this.Texture + "_Flame", AssetRequestMode.AsyncLoad);
 		if (flag) {
 			TextureAssets.ItemFlame[this.Item.type] = flameTexture;
 		}

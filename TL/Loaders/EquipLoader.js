@@ -1,4 +1,5 @@
 import { EquipType, TextureMap } from "../EquipType.js";
+import { EquipTexture } from "../EquipTexture.js";
 import { Terraria, System, Microsoft } from "../ModImports.js";
 
 const Item = Terraria.Item;
@@ -93,7 +94,7 @@ export class EquipLoader {
         ResizeAndRegisterType(EquipType.Legs, Item.legType);
 
         ResizeAndRegisterType = (equipType, typeArray) => {
-            System.Array.Resize(typeArray, nextEquip[equipType]);
+            Array.Resize(typeArray, nextEquip[equipType]);
             for (const [key, value] of Object.entries(this.equipTextures[type])) {
                 typeArray[key] = value;
             }

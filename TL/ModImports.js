@@ -92,7 +92,8 @@ export const Terraria = {
 
     DataStructures: {
         PlayerDrawSet: new NativeClass('Terraria.DataStructures', 'PlayerDrawSet'),
-        PlayerDeathReason: new NativeClass('Terraria.DataStructures', 'PlayerDeathReason')
+        PlayerDeathReason: new NativeClass('Terraria.DataStructures', 'PlayerDeathReason'),
+        WingStats: new NativeClass('Terraria.DataSturctures', 'WingStats')
     },
 
     Audio: {
@@ -113,7 +114,8 @@ export const Terraria = {
     },
 
     Initializers: {
-        AssetInitializer: new NativeClass('Terraria.Initializers', 'AssetInitializer')
+        AssetInitializer: new NativeClass('Terraria.Initializers', 'AssetInitializer'),
+        WingStatsInitializer: new NativeClass('Terraria.Initializers', 'WingStatsInititalizer')
     }
 }
 
