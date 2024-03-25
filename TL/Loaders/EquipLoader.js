@@ -45,28 +45,27 @@ export class EquipLoader {
     }
  
     static ResizeAndFillArrays() {
-        Array.Resize(TextureAssets.ArmorHead, this.nextEquip[EquipType.Head]);
-        Array.Resize(TextureAssets.ArmorBody, this.nextEquip[EquipType.Body]);
-        Array.Resize(TextureAssets.ArmorBodyComposite, this.nextEquip[EquipType.Body]);
-        Array.Resize(TextureAssets.FemaleBody, this.nextEquip[EquipType.Body]);
-        Array.Resize(TextureAssets.ArmorArm, this.nextEquip[EquipType.Body]);
-        Array.Resize(TextureAssets.ArmorLeg, this.nextEquip[EquipType.Legs]);
-        Array.Resize(TextureAssets.AccHandsOn, this.nextEquip[EquipType.HandsOn]);
-        Array.Resize(TextureAssets.AccHandsOnComposite, this.nextEquip[EquipType.HandsOn]);
-        Array.Resize(TextureAssets.AccHandsOff, this.nextEquip[EquipType.HandsOff]);
-        Array.Resize(TextureAssets.AccHandsOffComposite, this.nextEquip[EquipType.HandsOff]);
-        Array.Resize(TextureAssets.AccBack, this.nextEquip[EquipType.Back]);
-        Array.Resize(TextureAssets.AccFront, this.nextEquip[EquipType.Front]);
-        Array.Resize(TextureAssets.AccShoes, this.nextEquip[EquipType.Shoes]);
-        Array.Resize(TextureAssets.AccWaist, this.nextEquip[EquipType.Waist]);
-        Array.Resize(TextureAssets.Wings, this.nextEquip[EquipType.Wings]);
-        Array.Resize(TextureAssets.AccShield, this.nextEquip[EquipType.Shield]);
-        Array.Resize(TextureAssets.AccNeck, this.nextEquip[EquipType.Neck]);
-        Array.Resize(TextureAssets.AccFace, this.nextEquip[EquipType.Face]);
-        Array.Resize(TextureAssets.AccBeard, this.nextEquip[EquipType.Beard]);
-        Array.Resize(TextureAssets.AccBalloon, this.nextEquip[EquipType.Balloon]);
+        TextureAssets.ArmorBody = TextureAssets.ArmorBody.cloneResized(this.nextEquip[EquipType.Body]);
+        TextureAssets.ArmorBodyComposite = TextureAssets.ArmorBodyComposite.cloneResized(this.nextEquip[EquipType.Body]);
+        TextureAssets.FemaleBody = TextureAssets.FemaleBody.cloneResized(this.nextEquip[EquipType.Body]);
+        TextureAssets.ArmorArm = TextureAssets.ArmorArm.cloneResized(this.nextEquip[EquipType.Body]);
+        TextureAssets.ArmorLeg = TextureAssets.ArmorLeg.cloneResized(this.nextEquip[EquipType.Legs]);
+        TextureAssets.AccHandsOn = TextureAssets.AccHandsOn.cloneResized(this.nextEquip[EquipType.HandsOn]);
+        TextureAssets.AccHandsOnComposite = TextureAssets.AccHandsOnComposite.cloneResized(this.nextEquip[EquipType.HandsOn]);
+        TextureAssets.AccHandsOff = TextureAssets.AccHandsOff.cloneResized(this.nextEquip[EquipType.HandsOff]);
+        TextureAssets.AccHandsOffComposite = TextureAssets.AccHandsOffComposite.cloneResized(this.nextEquip[EquipType.HandsOff]);
+        TextureAssets.AccBack = TextureAssets.AccBack.cloneResized(this.nextEquip[EquipType.Back]);
+        TextureAssets.AccFront = TextureAssets.AccFront.cloneResized(this.nextEquip[EquipType.Front]);
+        TextureAssets.AccShoes = TextureAssets.AccShoes.cloneResized(this.nextEquip[EquipType.Shoes]);
+        TextureAssets.AccWaist = TextureAssets.AccWaist.cloneResized(this.nextEquip[EquipType.Waist]);
+        TextureAssets.Wings = TextureAssets.Wings.cloneResized(this.nextEquip[EquipType.Wings]);
+        TextureAssets.AccShield = TextureAssets.AccShield.cloneResized(this.nextEquip[EquipType.Shield]);
+        TextureAssets.AccNeck = TextureAssets.AccNeck.cloneResized(this.nextEquip[EquipType.Neck]);
+        TextureAssets.AccFace = TextureAssets.AccFace.cloneResized(this.nextEquip[EquipType.Face]);
+        TextureAssets.AccBeard = TextureAssets.AccBeard.cloneResized(this.nextEquip[EquipType.Beard]);
+        TextureAssets.AccBalloon = TextureAssets.AccBalloon.cloneResized(this.nextEquip[EquipType.Balloon]);
 
-        LoaderUtils.ResetStaticMembers(typeof(ArmorIDs));
+        Utility.ResetStaticMembers(typeof(ArmorIDs));
 
         WingStatsInitializer.Load();
         const equipTypes = this.EquipTypes;
@@ -89,15 +88,17 @@ export class EquipLoader {
             }
         }
 
-        ResizeAndRegisterType(EquipType.Head, Item.headType);
-        ResizeAndRegisterType(EquipType.Body, Item.bodyType);
-        ResizeAndRegisterType(EquipType.Legs, Item.legType);
+        Item.headType = ResizeAndRegisterType(EquipType.Head, Item.headType);
+        Item.bodyType = ResizeAndRegisterType(EquipType.Body, Item.bodyType);
+        Item.legType = ResizeAndRegisterType(EquipType.Legs, Item.legType);
 
         ResizeAndRegisterType = (equipType, typeArray) => {
-            Array.Resize(typeArray, nextEquip[equipType]);
+            const res = typeArray.cloneResized(nextEquip[equipType]);
             for (const [key, value] of Object.entries(this.equipTextures[type])) {
-                typeArray[key] = value;
+                res[key] = value;
             }
+
+            return res;
         }
     }
  

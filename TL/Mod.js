@@ -19,7 +19,6 @@ export class Mod {
 	ContentSource;
 	equipTextures;
 	ModdedKeys = new Set();
-
 	loading = false;
 
 	static Register() {
@@ -31,10 +30,12 @@ export class Mod {
 	}
 
 	static GetLocalization(suffix, makeDefaultValue) {
-		let text;
-		const flag = LanguageManager._localizedTexts.TryGetValue(this.GetLocalizationKey(suffix), text);
+		const flag = LanguageManager._localizedTexts.hasOwnProperty(this.GetLocalizationKey(suffix));
 
-		if (!flag) {
+		let text;
+		if (flag) {
+			text = LanguageManager._localizedTexts[this.GetLocalizationKey(suffix)];
+		} else {
 			this.moddedKeys.add(suffix);
 			text = LanguageManager._localizedTexts[suffix] = LocalizationText.new()["void .ctor(string key, string text)"](suffix, (makeDefaultValue ? makeDefaultValue() : null) || suffix);
 		}

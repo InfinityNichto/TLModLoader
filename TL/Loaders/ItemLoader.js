@@ -1,3 +1,4 @@
+import { EquipLoader } from "./EquipLoader.js";
 import { Terraria, System, Microsoft } from "../ModImports.js";
 
 const Main = Terraria.Main;
@@ -16,7 +17,7 @@ const Add = Vector2["Vector2 Add(Vector2 value1, Vector2 value2)"];
 
 export class ItemLoader {
     static items = [];
-    static ItemCount = ItemID.Count;
+    static get ItemCount() { return ItemID.Count; }
 
     static Register(item) {
         this.items.push(item);
@@ -28,17 +29,16 @@ export class ItemLoader {
     }
 
     ResizeArrays() {
-        Array.Resize(TextureAssets.Item, ItemLoader.ItemCount);
-        Array.Resize(TextureAssets.ItemFlame, ItemLoader.ItemCount);
+        TextureAssets.Item = TextureAssets.cloneResized(ItemLoader.ItemCount);
+        TextureAssets.ItemFlame, TextureAssets.ItemFlame.cloneResized(ItemLoader.ItemCount);
         LoaderUtils.ResetStaticMembers(typeof(ItemID));
         LoaderUtils.ResetStaticMembers(typeof(AmmoID));
         LoaderUtils.ResetStaticMembers(typeof(PrefixLegacy.ItemSets));
-        Array.Resize(Item.cachedItemSpawnsByType, ItemLoader.ItemCount);
-        Array.Resize(Item.staff, ItemLoader.ItemCount);
-        Array.Resize(Item.claw, ItemLoader.ItemCount);
-        Array.Resize(Lang._itemNameCache, ItemLoader.ItemCount);
-        Array.Resize(Lang._itemTooltipCache, ItemLoader.ItemCount);
-        Array.Resize(RecipeLoader.FirstRecipeForItem, ItemLoader.ItemCount);
+        Item.cachedItemSpawnsByType = Item.cachedItemSpawnsByType.cloneResized(ItemLoader.ItemCount);
+        Item.staff = Item.staff.cloneResized(ItemLoader.ItemCount);
+        Item.claw = Item.claw.cloneResized(ItemLoader.ItemCount);
+        Lang._itemNameCache = Lang._itemNameCache.cloneResized(ItemLoader.ItemCount);
+        Lang._itemTooltipCache = Lang._itemTooltipCache.cloneResized(ItemLoader.ItemCount);
 
         for (let i = ID.ItemID.Count; i < ItemLoader.ItemCount; i++) {
             Lang._itemNameCache[i] = LocalizedText.Empty;
@@ -46,7 +46,7 @@ export class ItemLoader {
             Item.cachedItemSpawnsByType[i] = -1;
         }
 
-        Array.Resize(Main.itemAnimations, ItemLoader.ItemCount);
+        Main.itemAnimations = Main.itemAnimations.cloneResized(ItemLoader.ItemCount);
         Main.InitializeItemAnimations();
 
         Main.anglerQuestItemNetIDs = Main.anglerQuestItemNetIDs.Concat(

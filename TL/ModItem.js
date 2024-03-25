@@ -1,12 +1,15 @@
 import { Mod } from "./Mod.js";
 import { ModContent } from "./ModContent.js"; 
 import { ModTypeLookup } from "./ModTypeLookup.js";
+import { ItemLoader } from "./Loaders/ItemLoader.js";
 import { DamageClass } from "./DamageClass.js";
 import { DamageClassLoader } from "./Loaders/DamageClassLoader.js";
+import { PrefixCategory } from "./PrefixCategory.js";
 import { Terraria, Microsoft, ReLogic } from "./ModImports.js";
 
 const Item = Terraria.Item;
 const Recipe = Terraria.Recipe;
+const PrefixLegacy = Terraria.GameContent.PrefixLegacy;
 const ID = Terraria.ID;
 const ContentSamples = ID.ContentSamples;
 const TextureAssets = Terraria.GameContent.TextureAssets;
@@ -21,6 +24,44 @@ export class ModItem extends ModEntityType {
     get DisplayName() { return Mod.GetLocalization("DisplayName", this.NameWithSpaces) }
     get Tooltip() { return Mod.GetLocalization("Tooltip", () => "") }
     Texture = `Textures/${this.Name}`;
+
+	static GetVanillaPrefixes(category) {
+		switch (category) {
+			case PrefixCategory.Melee:
+				return PrefixLegacy.Prefixes.PrefixesForSwords;
+			case PrefixCategory.Ranged:
+				return PrefixLegacy.Prefixes.PrefixesForGunsBows;
+			case PrefixCategory.Magic:
+				return PrefixLegacy.Prefixes.PrefixesForMagicAndSummons;
+			case PrefixCategory.AnyWeapon:
+				return PrefixLegacy.Prefixes.PrefixesForSpears;
+			case PrefixCategory.Accessory:
+				return PrefixLegacy.Prefixes.PrefixesForAccessories;
+		}
+	}
+
+	GetPrefixCategories() {
+        if (PrefixLegacy.ItemSets.SwordsHammersAxesPicks[this.Type] || ItemLoader.MeleePrefix(this.constructor)) {
+            return PrefixCategory.Melee;
+        }
+        if (PrefixLegacy.ItemSets.GunsBows[this.Type] || ItemLoader.RangedPrefix(this.constructor))
+        {
+            return PrefixCategory.Ranged;
+        }
+        if (PrefixLegacy.ItemSets.MagicAndSummon[this.Type] || ItemLoader.MagicPrefix(this.constructor))
+        {
+            return PrefixCategory.Magic;
+        }
+        if (PrefixLegacy.ItemSets.SpearsMacesChainsawsDrillsPunchCannon[this.Type] || PrefixLegacy.ItemSets.BoomerangsChakrams[this.Type] || PrefixLegacy.ItemSets.ItemsThatCanHaveLegendary2[this.Type] || ItemLoader.WeaponPrefix(this.constructor))
+        {
+            return PrefixCategory.AnyWeapon;
+        }
+        if (this.IsAPrefixableAccessory())
+        {
+            return PrefixCategory.Accessory;
+        }
+        return null;
+	}
 
     CreateTemplateInstance() {
         this.ModItemTemplate = this.constructor;
