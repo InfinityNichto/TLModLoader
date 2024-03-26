@@ -1,6 +1,7 @@
 import { PrefixCategory } from "../PrefixCategory.js";
 import { ModItem } from "../ModItem.js";
 import { ItemLoader } from "./ItemLoader.js";
+import { Utility } from "../Utilities.js";
 import { Terraria } from "../ModImports.js";
  
 const ID = Terraria.ID;
@@ -94,7 +95,33 @@ export class PrefixLoader {
     }
  
     static Roll(item, unifiedRandom, justCheck) {
-        const elements = [];
+        const AddCategory = (category) => {
+            for (const modPrefix of this.categoryPrefixes[category].filter((pre) => pre.CanRoll(item))) {
+                Add(modPrefix.Type, modPrefix.RollChance(item));
+            }
+        }
+
+        const Add = (value, weight = 1.0) => {
+            weightedRandom.push([value, weight]);
+        }
+
+        const Get = () => {
+            let totalWeight = 0;
+            for (const num of weightedRandom) {
+                totalWeight += num;
+            }
+
+            let randDouble = Utility.randFloat(0.0001, 1) * totalWeight;
+            for (const num of weightedRandom) {
+                if (randDouble > num) {
+                    randDouble -= num;
+                }
+            }
+
+            return 0;
+        }
+
+        const weightedRandom = [];
         let prefix;
         const forcedPrefix = ItemLoader.ChoosePrefix(item, unifiedRandom);
         if (forcedPrefix > 0 && this.CanRoll(item, forcedPrefix)) {
@@ -104,58 +131,46 @@ export class PrefixLoader {
 
         prefix = 0;
         const prefixCategory = item.GetPrefixCategory();
-        if (prefixCategory.HasValue)
-        {
-            PrefixCategory category2 = prefixCategory.GetValueOrDefault();
-            if (justCheck)
-            {
+        if (prefixCategory != null) {
+            const category2 = prefixCategory;
+            if (justCheck) {
                 return true;
             }
-            int[] vanillaPrefixes = Item.GetVanillaPrefixes(category2);
-            foreach (int pre in vanillaPrefixes)
-            {
-                wr.Add(pre);
+
+            const vanillaPrefixes = ModItem.GetVanillaPrefixes(category2);
+            for (const pre of vanillaPrefixes) {
+                Add(pre);
             }
-            if (PrefixLegacy.ItemSets.ItemsThatCanHaveLegendary2[item.type])
-            {
-                wr.Add(84);
+
+            if (PrefixLegacy.ItemSets.ItemsThatCanHaveLegendary2[item.type]) {
+                Add(84);
             }
+
             AddCategory(category2);
-            if (IsWeaponSubCategory(category2))
-            {
+            if (this.IsWeaponSubCategory(category2)) {
                 AddCategory(PrefixCategory.AnyWeapon);
             }
-            for (int i = 0; i < 50; i++)
-            {
-                prefix = wr.Get();
-                if (ItemLoader.AllowPrefix(item, prefix))
-                {
+
+            for (let i = 0; i < 50; i++) {
+                prefix = Get();
+                if (ItemLoader.AllowPrefix(item, prefix)) {
                     return true;
                 }
             }
+
             return false;
-        }
-        return false;
-        void AddCategory(PrefixCategory category)
-        {
-            foreach (ModPrefix modPrefix in categoryPrefixes[category].Where((ModPrefix x) => x.CanRoll(item)))
-            {
-                wr.Add(modPrefix.Type, modPrefix.RollChance(item));
-            }
         }
     }
  
-    public static bool IsWeaponSubCategory(PrefixCategory category)
-    {
-        if (category != 0 && category != PrefixCategory.Ranged)
-        {
+    static IsWeaponSubCategory(category) {
+        if (category != 0 && category != PrefixCategory.Ranged) {
             return category == PrefixCategory.Magic;
         }
+
         return true;
     }
  
-    public static void ApplyAccessoryEffects(Player player, Item item)
-    {
-        GetPrefix(item.prefix)?.ApplyAccessoryEffects(player);
+    static ApplyAccessoryEffects(player, item) {
+        this.GetPrefix(item.prefix)?.ApplyAccessoryEffects(player);
     }
 }

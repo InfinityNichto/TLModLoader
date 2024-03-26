@@ -44,22 +44,23 @@ export class ModItem extends ModEntityType {
         if (PrefixLegacy.ItemSets.SwordsHammersAxesPicks[this.Type] || ItemLoader.MeleePrefix(this.constructor)) {
             return PrefixCategory.Melee;
         }
-        if (PrefixLegacy.ItemSets.GunsBows[this.Type] || ItemLoader.RangedPrefix(this.constructor))
-        {
+
+        if (PrefixLegacy.ItemSets.GunsBows[this.Type] || ItemLoader.RangedPrefix(this.constructor)) {
             return PrefixCategory.Ranged;
         }
-        if (PrefixLegacy.ItemSets.MagicAndSummon[this.Type] || ItemLoader.MagicPrefix(this.constructor))
-        {
+
+        if (PrefixLegacy.ItemSets.MagicAndSummon[this.Type] || ItemLoader.MagicPrefix(this.constructor)) {
             return PrefixCategory.Magic;
         }
-        if (PrefixLegacy.ItemSets.SpearsMacesChainsawsDrillsPunchCannon[this.Type] || PrefixLegacy.ItemSets.BoomerangsChakrams[this.Type] || PrefixLegacy.ItemSets.ItemsThatCanHaveLegendary2[this.Type] || ItemLoader.WeaponPrefix(this.constructor))
-        {
+
+        if (PrefixLegacy.ItemSets.SpearsMacesChainsawsDrillsPunchCannon[this.Type] || PrefixLegacy.ItemSets.BoomerangsChakrams[this.Type] || PrefixLegacy.ItemSets.ItemsThatCanHaveLegendary2[this.Type] || ItemLoader.WeaponPrefix(this.constructor)) {
             return PrefixCategory.AnyWeapon;
         }
-        if (this.IsAPrefixableAccessory())
-        {
+
+        if (this.IsAPrefixableAccessory()) {
             return PrefixCategory.Accessory;
         }
+		
         return null;
 	}
 
