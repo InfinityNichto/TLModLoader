@@ -1,5 +1,5 @@
 export class TooltipLine {
-    constructor(mod = "Terraria", name, text) {
+    constructor(name, text, mod = "Terraria") {
         if (typeof mod != "string") {
             this.Mod = mod.Name;
         } else { 

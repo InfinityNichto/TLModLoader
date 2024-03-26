@@ -1,4 +1,5 @@
 import { EquipLoader } from "./EquipLoader.js";
+import { TooltipLine } from "../TooltipLine.js";
 import { Terraria, System, Microsoft } from "../ModImports.js";
 
 const Main = Terraria.Main;
@@ -75,7 +76,7 @@ export class ItemLoader {
                 throw new Error(exception + " must have minStack bigger than 0");
             }
             if (value2 <= value1) {
-                throw new Exception(exception + " must have maxStack bigger than minStack");
+                throw new Error(exception + " must have maxStack bigger than minStack");
             }
         }
 
