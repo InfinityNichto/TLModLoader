@@ -11,7 +11,6 @@ const LocalizedText = Terraria.Localization.LocalizedText;
 const ItemTooltip = Terraria.UI.ItemTooltip;
 const TextureAssets = Terraria.GameContent.TextureAssets;
 const Vector2 = Microsoft.Xna.Framework.Vector2;
-const Array = System.Array;
 
 const Add = Vector2["Vector2 Add(Vector2 value1, Vector2 value2)"];
 

@@ -65,7 +65,7 @@ export class EquipLoader {
         TextureAssets.AccBeard = TextureAssets.AccBeard.cloneResized(this.nextEquip[EquipType.Beard]);
         TextureAssets.AccBalloon = TextureAssets.AccBalloon.cloneResized(this.nextEquip[EquipType.Balloon]);
 
-        Utility.ResetStaticMembers(typeof(ArmorIDs));
+        // ResetStaticMembers(ArmorIDs);
 
         WingStatsInitializer.Load();
         const equipTypes = this.EquipTypes;
@@ -88,11 +88,7 @@ export class EquipLoader {
             }
         }
 
-        Item.headType = ResizeAndRegisterType(EquipType.Head, Item.headType);
-        Item.bodyType = ResizeAndRegisterType(EquipType.Body, Item.bodyType);
-        Item.legType = ResizeAndRegisterType(EquipType.Legs, Item.legType);
-
-        ResizeAndRegisterType = (equipType, typeArray) => {
+        const ResizeAndRegisterType = (equipType, typeArray) => {
             const res = typeArray.cloneResized(nextEquip[equipType]);
             for (const [key, value] of Object.entries(this.equipTextures[type])) {
                 res[key] = value;
@@ -100,6 +96,10 @@ export class EquipLoader {
 
             return res;
         }
+
+        Item.headType = ResizeAndRegisterType(EquipType.Head, Item.headType);
+        Item.bodyType = ResizeAndRegisterType(EquipType.Body, Item.bodyType);
+        Item.legType = ResizeAndRegisterType(EquipType.Legs, Item.legType);
     }
  
     static GetNumVanilla(type) {
