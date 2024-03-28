@@ -21,10 +21,11 @@ export class Utility {
 		return Microsoft.Xna.Framework.Point.new()["void .ctor(int x, int y)"](x, y);
 	}
 
-	static Color(isFloat, r, g, b, a) {
+	static Color(isFloat, r, g, b, a = 255) {
 		const color = Microsoft.Xna.Framework.Graphics.Color.new();
 
 		if (isFloat) {
+			a == undefined ? a = 1 : a = a;
 			return color["void .ctor(float r, float g, float b, float a)"](r, g, b, a);
 		} else {
 			return color["void .ctor(int r, int g, int b, int a)"](r, g, b, a);

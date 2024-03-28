@@ -20,6 +20,7 @@ export const Terraria = {
     GUIPlayerCreateMenu: new NativeClass('', 'GUIPlayerCreateMenu'),
     PlayerSpawnContext: new NativeClass('Terraria', 'PlayerSpawnContext'),
     DelegateMethods: new NativeClass('Terraria', 'DelegateMethods'),
+    PopupText: new NativeClass('Terraria', 'PopupText'),
 
     ID: {
         NPCID: new NativeClass('Terraria.ID', 'NPCID'),
@@ -85,6 +86,10 @@ export const Terraria = {
 
         Metadata: {
             TileMaterials: new NativeClass('Terraria.GameContent.Metadata', 'TileMaterials')
+        },
+
+        UI: {
+            CustomCurrencyManager: new NativeClass('Terraria.GameContent.UI', 'CustomCurrencyManager')
         }
     },
 
@@ -168,6 +173,8 @@ export const ReLogic = {
 export const System = {
     Nullable: new NativeClass('System', 'Nullable`1'),
     Int32: new NativeClass('System', 'Int32'),
+    String: new NativeClass('System', 'String'),
+    Convert: new NativeClass('System', 'Convert'),
     Math: new NativeClass('System', 'Math'),
     DateTime: new NativeClass('System', 'DateTime'),
     Array: new NativeClass('System', 'Array'),
