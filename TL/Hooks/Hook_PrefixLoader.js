@@ -452,29 +452,29 @@ export function Initialize() {
 
         const baseRarity = self.rare;
         if (num >= 1.2) {
-            rare += 2;
+            self.rare += 2;
         }
         else if (num >= 1.05) {
-            rare++;
+            self.rare++;
         }
         else if (num <= 0.8) {
-            rare -= 2;
+            self.rare -= 2;
         }
         else if (num <= 0.95) {
-            rare--;
+            self.rare--;
         }
         if (baseRarity >= 12) {
-            rare = RarityLoader.GetRarity(baseRarity).GetPrefixedRarity(rare - baseRarity, num);
+            self.rare = RarityLoader.GetRarity(baseRarity).GetPrefixedRarity(self.rare - baseRarity, num);
         }
         else if (rare > 11) {
-            rare = 11;
+            self.rare = 11;
         }
-        if (rare > -11) {
-            if (rare < -1) {
-                rare = -1;
+        if (self.rare > -11) {
+            if (self.rare < -1) {
+                self.rare = -1;
             }
-            if (rare > RarityLoader.RarityCount - 1) {
-                rare = RarityLoader.RarityCount - 1;
+            if (self.rare > RarityLoader.RarityCount - 1) {
+                self.rare = RarityLoader.RarityCount - 1;
             }
         }
 
