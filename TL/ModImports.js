@@ -58,6 +58,7 @@ export const Terraria = {
         TextureAssets: new NativeClass('Terraria.GameContent', 'TextureAssets'),
         FontAssets: new NativeClass('Terraria.GameContent', 'FontAssets'),
         PrefixLegacy: new NativeClass('Terraria.GameContent', 'PrefixLegacy'),
+        ItemRarity: new NativeClass('Terraria.GameContent', 'ItemRraity'),
         
         ItemDropRules: {
             ItemDropRule: new NativeClass('Terraria.GameContent.ItemDropRules', 'ItemDropRule'),
