@@ -28,6 +28,14 @@ export class ItemLoader {
         return type < ID.ItemID.Count || type >= this.ItemCount ? null : items[type - ID.ItemID.Count];
     }
 
+    static IsModItem(itemOrType) {
+        if (typeof itemOrType == "number") {
+            return itemOrType >= this.ItemCount;
+        } else {
+            return itemOrType.type >= this.ItemCount;
+        }
+    }
+
     ResizeArrays() {
         TextureAssets.Item = TextureAssets.cloneResized(ItemLoader.ItemCount);
         TextureAssets.ItemFlame, TextureAssets.ItemFlame.cloneResized(ItemLoader.ItemCount);

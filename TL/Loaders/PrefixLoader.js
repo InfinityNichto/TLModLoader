@@ -94,7 +94,7 @@ export class PrefixLoader {
         return false;
     }
  
-    static Roll(item, unifiedRandom, justCheck) {
+    static Roll(item, unifiedRandom, prefix, justCheck) {
         const AddCategory = (category) => {
             for (const modPrefix of this.categoryPrefixes[category].filter((pre) => pre.CanRoll(item))) {
                 Add(modPrefix.Type, modPrefix.RollChance(item));
@@ -122,7 +122,6 @@ export class PrefixLoader {
         }
 
         const weightedRandom = [];
-        let prefix;
         const forcedPrefix = ItemLoader.ChoosePrefix(item, unifiedRandom);
         if (forcedPrefix > 0 && this.CanRoll(item, forcedPrefix)) {
             prefix = forcedPrefix;

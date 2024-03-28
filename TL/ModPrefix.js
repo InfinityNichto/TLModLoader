@@ -31,7 +31,9 @@ export class ModPrefix extends ModType {
         return RollChance(item) > 0;
     }
  
-    SetStats(damageMult, knockbackMult, useTimeMult, scaleMult, shootSpeedMult, manaMult, critBonus) { }
+    SetStats(damageMult, knockbackMult, useTimeMult, scaleMult, shootSpeedMult, manaMult, critBonus) {
+        return { damageMult, knockbackMult, useTimeMult, scaleMult, shootSpeedMult, manaMult, critBonus }
+    }
  
     AllStatChangesHaveEffectOn(item) {
         return true;
@@ -39,7 +41,9 @@ export class ModPrefix extends ModType {
  
     Apply(item) { }
  
-    ModifyValue(valueMult) { }
+    ModifyValue(valueMult) {
+        return valueMult;
+    }
  
     ApplyAccessoryEffects(player) {
     }

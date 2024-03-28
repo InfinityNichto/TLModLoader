@@ -117,6 +117,10 @@ export const Terraria = {
     Initializers: {
         AssetInitializer: new NativeClass('Terraria.Initializers', 'AssetInitializer'),
         WingStatsInitializer: new NativeClass('Terraria.Initializers', 'WingStatsInititalizer')
+    },
+
+    Utilities: {
+        UnifiedRandom: new NativeClass('Terraria.Utilities', 'UnifiedRandom')
     }
 }
 

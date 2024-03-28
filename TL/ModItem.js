@@ -25,6 +25,36 @@ export class ModItem extends ModEntityType {
     get Tooltip() { return Mod.GetLocalization("Tooltip", () => "") }
     Texture = `Textures/${this.Name}`;
 
+	currentUseAnimationCompensation = [0];
+	useTurnOnAnimationStart = [false];
+
+    CreateTemplateInstance() {
+        this.ModItemTemplate = this.constructor;
+        return NativeClass("Terraria", "Item").new()["void .ctor()"]();
+    }
+
+    Register() {
+		ModTypeLookup.Register(this.constructor);
+		Item.ResetStats(ItemLoader.Register(this.constructor));
+        this.ModItemTemplate = this.constructor;
+		OnCreated(new InitializationItemCreationContext());
+	}
+
+    SetupContent() {
+		ItemLoader.SetDefaults(this.Item, false);
+		AutoStaticDefaults();
+		SetStaticDefaults();
+		ID.ItemID.Search.Add(this.FullName, this.Type);
+	}
+
+    _damageClass = DamageClass.Default;
+    get DamageType() { return this._damageClass }
+    set DamageType(value) { this._damageClass = value ?? new Error("Item DamageType cannot be null.") }
+
+    CountsAsClass(damageClass) {
+        return DamageClassLoader.effectInheritanceCache[this.DamageType.Type, this.damageClass.Type];
+    }
+
 	static GetVanillaPrefixes(category) {
 		switch (category) {
 			case PrefixCategory.Melee:
@@ -64,32 +94,22 @@ export class ModItem extends ModEntityType {
         return null;
 	}
 
-    CreateTemplateInstance() {
-        this.ModItemTemplate = this.constructor;
-        return NativeClass("Terraria", "Item").new()["void .ctor()"]();
+	static UndoItemAnimationCompensations(item) {
+        item.useAnimation -= this.currentUseAnimationCompensation.getOrDefault(item.type);
+        this.currentUseAnimationCompensation[item.type] = 0;
     }
 
-    Register() {
-		ModTypeLookup.Register(this.constructor);
-		Item.ResetStats(ItemLoader.Register(this.constructor));
-        this.ModItemTemplate = this.constructor;
-		OnCreated(new InitializationItemCreationContext());
+	static ApplyItemAnimationCompensationsToVanillaItems(item) {
+		this.currentUseAnimationCompensation[item.type] = 0;
+		if (item.type < ID.ItemID.Count && item.autoReuse && !item.noMelee) {
+			item.useAnimation--;
+			this.currentUseAnimationCompensation[item.type]--;
+		}
+
+		if (item.type < ID.ItemID.Count && item.useStyle != 0 && !item.autoReuse && !item.useTurn && item.shoot == 0 && item.damage > 0) {
+			this.useTurnOnAnimationStart[item.type] = true;
+		}
 	}
-
-    SetupContent() {
-		ItemLoader.SetDefaults(this.Item, false);
-		AutoStaticDefaults();
-		SetStaticDefaults();
-		ID.ItemID.Search.Add(this.FullName, this.Type);
-	}
-
-    _damageClass = DamageClass.Default;
-    get DamageType() { return this._damageClass }
-    set DamageType(value) { this._damageClass = value ?? new Error("Item DamageType cannot be null.") }
-
-    CountsAsClass(damageClass) {
-        return DamageClassLoader.effectInheritanceCache[this.DamageType.Type, this.damageClass.Type];
-    }
 
     SetDefaults() { }
 
